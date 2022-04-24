@@ -1,0 +1,3 @@
+[submodule "posey-lib"]
+	path = posey-lib
+	url = git@github.com:SML-Posey/posey-lib.git

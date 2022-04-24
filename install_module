@@ -1,0 +1,4 @@
+#!/bin/bash
+
+# TODO: Detect path.
+cp -v build/python/pyposey*.so /opt/anaconda3/anaconda3/envs/py3/lib/python3.8/site-packages/.
