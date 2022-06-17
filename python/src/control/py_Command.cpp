@@ -1,3 +1,7 @@
+#ifdef _MSC_VER
+#include <corecrt.h>
+#endif
+
 #include <pybind11/pybind11.h>
 
 #include "control/Command.hpp"
