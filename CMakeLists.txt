@@ -8,9 +8,13 @@ endif()
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+option(ENABLE_TESTS "Enable unit testing" OFF)
 
 find_package(fmt REQUIRED)
-find_package(Catch2 REQUIRED)
+
+if (ENABLE_TESTS)
+    find_package(Catch2 REQUIRED)
+endif()
 
 file(GLOB_RECURSE POSEY_LIB_SRCS
     ${CMAKE_SOURCE_DIR}/posey-lib/*.cpp)
@@ -29,20 +33,24 @@ target_include_directories(PoseySim PUBLIC
     ${CMAKE_SOURCE_DIR}/sim/src)
 target_link_libraries(PoseySim PoseyLib fmt::fmt)
 
-file(GLOB_RECURSE POSEY_TEST_SRCS
-    ${CMAKE_SOURCE_DIR}/test/*.cpp)
-add_executable(PoseyTest ${POSEY_TEST_SRCS})
-target_link_libraries(PoseyTest PoseyLib Catch2::Catch2 fmt::fmt)
-target_include_directories(PoseyTest PUBLIC
-    ${CMAKE_SOURCE_DIR}/posey-lib
-    ${CMAKE_SOURCE_DIR}/sim/src
-    ${CMAKE_SOURCE_DIR}/test)
+if (ENABLE_TESTS)
+    file(GLOB_RECURSE POSEY_TEST_SRCS
+        ${CMAKE_SOURCE_DIR}/test/*.cpp)
+    add_executable(PoseyTest ${POSEY_TEST_SRCS})
+    target_link_libraries(PoseyTest PoseyLib Catch2::Catch2 fmt::fmt)
+    target_include_directories(PoseyTest PUBLIC
+        ${CMAKE_SOURCE_DIR}/posey-lib
+        ${CMAKE_SOURCE_DIR}/sim/src
+        ${CMAKE_SOURCE_DIR}/test)
+endif()
 
 add_subdirectory(python)
 
-include(CTest)
-include(Catch)
-catch_discover_tests(PoseyTest)
+if (ENABLE_TESTS)
+    include(CTest)
+    include(Catch)
+    catch_discover_tests(PoseyTest)
+endif()
 
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})
 set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})
