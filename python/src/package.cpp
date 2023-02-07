@@ -16,7 +16,7 @@ enum PyMessageAck {
 
 namespace py = pybind11;
 
-void tasks_TaskMainTelemetry(py::module &m);
+void tasks_TaskTelemetry(py::module &m);
 
 void control_Command(py::module &m);
 
@@ -57,7 +57,7 @@ PYBIND11_MODULE(pyposey, m) {
     platform_sensors_IMUData(platform_sensors);
     platform_sensors_BLEData(platform_sensors);
 
-    tasks_TaskMainTelemetry(tasks);
+    tasks_TaskTelemetry(tasks);
 
     // TODO: For now don't register because it's not being used and it conflicts
     // with the TaskMain TM due to size... ugh...

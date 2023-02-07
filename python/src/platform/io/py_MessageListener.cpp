@@ -7,7 +7,7 @@
 #include "platform/io/MessageListener.hpp"
 
 // Adding message support manually.
-#include "tasks/TaskMain.hpp"
+#include "tasks/TaskTelemetry.hpp"
 
 #include "control/Command.hpp"
 
@@ -60,7 +60,7 @@ void platform_io_MessageListener(py::module &m)
         .def("process_next", &PyMessageListener::process_next)
         ;
 
-    add_support<TaskMainTelemetry>(c);
+    add_support<TaskTelemetry>(c);
 
     add_support<Command>(c);
 

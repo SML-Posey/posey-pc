@@ -11,8 +11,8 @@ namespace py = pybind11;
 
 void control_Command(py::module & m)
 {
-    py::enum_<Command::Commands>(m, "Commands")
-        .value("NoOp", Command::Commands::NoOp)
+    py::enum_<Command::CommandType>(m, "CommandType")
+        .value("NoOp", Command::NoOp)
         .export_values();
     py::class_<Command>(m, "Command")
         .def(py::init<>())
@@ -20,9 +20,7 @@ void control_Command(py::module & m)
         .def("serialize", &Command::serialize)
         .def("deserialize", &Command::deserialize)
         .def_readwrite("command", &Command::command)
-        .def_readwrite("arg1", &Command::arg1)
-        .def_readwrite("arg2", &Command::arg2)
-        .def_readwrite("arg3", &Command::arg3)
+        .def_readwrite("payload", &Command::payload)
         .def_readwrite("ack", &Command::ack)
         ;
     py::class_<Command::Buffer>(m, "CommandBuffer")
