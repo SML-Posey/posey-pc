@@ -11,14 +11,17 @@ enum PyMessageAck {
     Expected      = MessageAck::Expected,
     OK            = MessageAck::OK,
     Resend        = MessageAck::Resend,
-    Error         = MessageAck::Error
+    Error         = MessageAck::Error,
+    Working       = MessageAck::Working
 };
 
 namespace py = pybind11;
 
-void tasks_TaskTelemetry(py::module &m);
+void tasks_TaskWaistTelemetry(py::module &m);
+void tasks_TaskWatchTelemetry(py::module &m);
 
 void control_Command(py::module &m);
+void control_DataSummary(py::module &m);
 
 void platform_io_BufferSerializer(py::module &m);
 void platform_io_MessageListener(py::module &m);
@@ -57,11 +60,11 @@ PYBIND11_MODULE(pyposey, m) {
     platform_sensors_IMUData(platform_sensors);
     platform_sensors_BLEData(platform_sensors);
 
-    tasks_TaskTelemetry(tasks);
+    tasks_TaskWaistTelemetry(tasks);
+    tasks_TaskWatchTelemetry(tasks);
 
-    // TODO: For now don't register because it's not being used and it conflicts
-    // with the TaskMain TM due to size... ugh...
-    // control_Command(control);
+    control_Command(control);
+    control_DataSummary(control);
 
     m.attr("__version__") = "1.0";
 }

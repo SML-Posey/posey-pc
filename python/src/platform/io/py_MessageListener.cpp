@@ -7,9 +7,13 @@
 #include "platform/io/MessageListener.hpp"
 
 // Adding message support manually.
-#include "tasks/TaskTelemetry.hpp"
+#include "tasks/TaskWaistTelemetry.hpp"
+#include "tasks/TaskWatchTelemetry.hpp"
 
 #include "control/Command.hpp"
+#include "control/DataSummary.hpp"
+
+#include "platform/sensors/FlashBlockData.hpp"
 
 #include "platform/sensors/IMUData.hpp"
 #include "platform/sensors/BLEData.hpp"
@@ -60,9 +64,13 @@ void platform_io_MessageListener(py::module &m)
         .def("process_next", &PyMessageListener::process_next)
         ;
 
-    add_support<TaskTelemetry>(c);
+    add_support<TaskWaistTelemetry>(c);
+    add_support<TaskWatchTelemetry>(c);
 
     add_support<Command>(c);
+    add_support<DataSummary>(c);
+
+    add_support<FlashBlockData>(c);
 
     add_support<IMUData>(c);
     add_support<BLEData>(c);
