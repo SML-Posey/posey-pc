@@ -44,6 +44,7 @@ PYBIND11_MODULE(pyposey, m) {
         .value("OK", PyMessageAck::OK)
         .value("Resend", PyMessageAck::Resend)
         .value("Error", PyMessageAck::Error)
+        .value("Working", PyMessageAck::Working)
         .export_values();
 
     auto platform = m.def_submodule("platform");

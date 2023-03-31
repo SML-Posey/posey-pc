@@ -21,21 +21,24 @@ void platform_sensors_BLEData(py::module &m)
         .def("serialize", &BLEData::serialize)
         .def("deserialize", &BLEData::deserialize)
         .def_readwrite("time", &BLEData::time)
-        .def_property("addr",
+        .def_property("uuid",
             [](BLEData & data) -> pybind11::array
             {
                 auto dtype = pybind11::dtype(pybind11::format_descriptor<uint8_t>::format());
-                auto base = pybind11::array(dtype, {BLEData::ble_addr_len}, {sizeof(uint8_t)});
+                auto base = pybind11::array(dtype, {BLEData::uuid_len}, {sizeof(uint8_t)});
                 return pybind11::array(
-                    dtype, {BLEData::ble_addr_len}, {sizeof(uint8_t)}, data.addr, base);
+                    dtype, {BLEData::uuid_len}, {sizeof(uint8_t)}, data.uuid, base);
             },
             [](BLEData & data, pybind11::array_t<uint8_t> new_data)
             {
-                if (new_data.size() != BLEData::ble_addr_len)
-                    throw std::invalid_argument(fmt::format("Must set to {:d} element vector!", BLEData::ble_addr_len));
-                for (auto i = 0; i < BLEData::ble_addr_len; ++i)
-                    data.addr[i] = new_data.at(i);
+                if (new_data.size() != BLEData::uuid_len)
+                    throw std::invalid_argument(fmt::format("Must set to {:d} element vector!", BLEData::uuid_len));
+                for (auto i = 0; i < BLEData::uuid_len; ++i)
+                    data.uuid[i] = new_data.at(i);
             })
+        .def_readwrite("major", &BLEData::major)
+        .def_readwrite("minor", &BLEData::minor)
+        .def_readwrite("power", &BLEData::power)
         .def_readwrite("rssi", &BLEData::rssi)
         ;
     py::class_<BLEData::Buffer>(m, "BLEDataBuffer")
