@@ -30,9 +30,13 @@ void add_support(Tm & c)
     }).def("add_listener", [](PyMessageListener & ml, BufferMessagePair<Td> & message) {
         return ml.add_listener(message);
     }).def("write", [](PyMessageListener & ml, const typename Td::Buffer & buffer) {
-        ml.write(buffer.get_buffer(), buffer.used());
+        return ml.write(
+            buffer.get_buffer(),
+            buffer.used());
     }).def("write", [](PyMessageListener & ml, const BufferMessagePair<Td> & message) {
-        ml.write(message.buffer.get_buffer(), message.buffer.used());
+        return ml.write(
+            message.buffer.get_buffer(),
+            message.buffer.used());
     });
 }
 
@@ -58,7 +62,21 @@ void platform_io_MessageListener(py::module &m)
             auto info(py::buffer(buffer).request());
             auto data = reinterpret_cast<const uint8_t *>(info.ptr);
             uint16_t length = static_cast<uint16_t>(info.size);
-            ml.write(data, length);
+            return ml.write(data, length);
+        })
+
+        .def("read", [](PyMessageListener & ml, uint16_t length) {
+            if (length > ml.used())
+                length = ml.used();
+            auto buffer = new uint8_t[length];
+            for (uint16_t i = 0; i < length; i++)
+                buffer[i] = ml.read_byte();
+            ml.consume(length);
+            auto result = py::bytes(
+                reinterpret_cast<const char *>(buffer),
+                length);
+            delete[] buffer;
+            return result;
         })
 
         .def("process_next", &PyMessageListener::process_next)

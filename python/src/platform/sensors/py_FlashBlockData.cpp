@@ -20,8 +20,23 @@ void platform_sensors_FlashBlockData(py::module &m)
         .def_readonly_static("message_id", &FlashBlockData::message_id)
         .def("serialize", &FlashBlockData::serialize)
         .def("deserialize", &FlashBlockData::deserialize)
-        .def_readwrite("time", &FlashBlockData::time)
+        .def_readwrite("time", &FlashBlockData::time_ms)
         .def_readwrite("slot", &FlashBlockData::slot)
+        .def_property("mac",
+            [](FlashBlockData & data) -> pybind11::array
+            {
+                auto dtype = pybind11::dtype(pybind11::format_descriptor<uint8_t>::format());
+                auto base = pybind11::array(dtype, {6}, {sizeof(uint8_t)});
+                return pybind11::array(
+                    dtype, {6}, {sizeof(uint8_t)}, data.mac, base);
+            },
+            [](FlashBlockData & data, pybind11::array_t<uint8_t> new_data)
+            {
+                if (new_data.size() != 6)
+                    throw std::invalid_argument(fmt::format("Must set MAC to {:d} element vector!", 6));
+                for (auto i = 0; i < 6; ++i)
+                    data.mac[i] = new_data.at(i);
+            })
         .def_readwrite("rssi", &FlashBlockData::rssi)
         .def_readwrite("block_bytes", &FlashBlockData::block_bytes)
         ;
@@ -32,6 +47,14 @@ void platform_sensors_FlashBlockData(py::module &m)
             return py::memoryview::from_memory(
                 b.get_buffer(), b.used());
         })
+        .def("write", 
+            [](FlashBlockData::Buffer & b, pybind11::array_t<uint8_t> new_data)
+            {
+                uint16_t size = new_data.size();
+                if (size > b.capacity()) size = b.capacity();
+                b.reset();
+                b.write(new_data.data(), size);
+            })
         ;
     add_buffer_message_pair<FlashBlockData>(m, "FlashBlockMessage");
 }

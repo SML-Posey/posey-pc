@@ -29,6 +29,7 @@ void platform_io_MessageListener(py::module &m);
 void platform_sensors_SensorCalibration(py::module &m);
 void platform_sensors_IMUData(py::module &m);
 void platform_sensors_BLEData(py::module &m);
+void platform_sensors_FlashBlockData(py::module &m);
 
 // TODO: Currently message buffer objects are aliased types defined by the
 // message size, e.g., IMUData::Buffer == BufferSerializer<sizeof(IMUData)>.
@@ -60,6 +61,7 @@ PYBIND11_MODULE(pyposey, m) {
     platform_sensors_SensorCalibration(platform_sensors);
     platform_sensors_IMUData(platform_sensors);
     platform_sensors_BLEData(platform_sensors);
+    platform_sensors_FlashBlockData(platform_sensors);
 
     tasks_TaskWaistTelemetry(tasks);
     tasks_TaskWatchTelemetry(tasks);

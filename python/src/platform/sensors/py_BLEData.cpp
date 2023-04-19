@@ -20,7 +20,7 @@ void platform_sensors_BLEData(py::module &m)
         .def_readonly_static("message_id", &BLEData::message_id)
         .def("serialize", &BLEData::serialize)
         .def("deserialize", &BLEData::deserialize)
-        .def_readwrite("time", &BLEData::time)
+        .def_readwrite("time", &BLEData::time_ms)
         .def_property("uuid",
             [](BLEData & data) -> pybind11::array
             {
