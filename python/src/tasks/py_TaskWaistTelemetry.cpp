@@ -21,6 +21,7 @@ void tasks_TaskWaistTelemetry(py::module & m)
         .def_readwrite("invalid_checksum", &TaskWaistTelemetry::invalid_checksum)
         .def_readwrite("missed_deadline", &TaskWaistTelemetry::missed_deadline)
         .def_readwrite("Vbatt", &TaskWaistTelemetry::Vbatt)
+        .def_readwrite("ble_throughput", &TaskWaistTelemetry::ble_throughput)
         ;
     py::class_<TaskWaistTelemetry::Buffer>(m, "TaskWaistTelemetryBuffer")
         .def(py::init<>())
