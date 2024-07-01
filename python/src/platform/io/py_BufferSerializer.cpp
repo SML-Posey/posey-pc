@@ -1,5 +1,5 @@
 #ifdef _MSC_VER
-#include <corecrt.h>
+    #include <corecrt.h>
 #endif
 
 #include <pybind11/pybind11.h>
@@ -8,8 +8,6 @@
 
 namespace py = pybind11;
 
-void platform_io_BufferSerializer(py::module &m)
-{
-    py::class_<BufferCopyCallback>(m, "BufferCopyCallback")
-        ;
+void platform_io_BufferSerializer(py::module& m) {
+    py::class_<BufferCopyCallback>(m, "BufferCopyCallback");
 }

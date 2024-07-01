@@ -1,12 +1,11 @@
 #include "catch2/catch.hpp"
 #include "fmt/format.h"
 
-#include "test_common.hpp"
-#include "control/Command.hpp"
 #include "MessageAck.hpp"
+#include "control/Command.hpp"
+#include "test_common.hpp"
 
-TEST_CASE("Test command", "[Command]")
-{
+TEST_CASE("Test command", "[Command]") {
     Command cmd;
     cmd.command = Command::NoOp;
     cmd.arg1 = 10;

@@ -1,20 +1,18 @@
 #include "catch2/catch.hpp"
 #include "test_common.hpp"
 
-#include "algorithm"/RingBuffer.h"
+#include "algorithm" / RingBuffer.h "
 
 // Test RingBuffer.
-TEST_CASE("RingBuffer", "[RingBuffer]")
-{
+TEST_CASE("RingBuffer", "[RingBuffer]") {
     // Test write_from().
-    SECTION("write_from and read_to")
-    {
+    SECTION("write_from and read_to") {
         RingBuffer<uint8_t, 4> rb;
         REQUIRE(rb.capacity() == 4);
         REQUIRE(rb.used() == 0);
         REQUIRE(rb.free() == 4);
 
-        uint8_t buffer[4] = { 0, 1, 2, 3 };
+        uint8_t buffer[4] = {0, 1, 2, 3};
         REQUIRE(rb.write_from(buffer, 4) == 4);
         REQUIRE(rb.used() == 4);
         REQUIRE(rb.free() == 0);
@@ -45,10 +43,9 @@ TEST_CASE("RingBuffer", "[RingBuffer]")
     }
 
     // Test circular writing and reading.
-    SECTION("Test wrapping")
-    {
+    SECTION("Test wrapping") {
         RingBuffer<uint8_t, 4> rb;
-        uint8_t buffer[4] = { 0, 1, 2, 3 };
+        uint8_t buffer[4] = {0, 1, 2, 3};
         REQUIRE(rb.write_from(buffer, 2) == 2);
         REQUIRE(rb.used() == 2);
         REQUIRE(rb.free() == 2);
@@ -75,6 +72,6 @@ TEST_CASE("RingBuffer", "[RingBuffer]")
         REQUIRE(read_buffer[0] == 1);
         REQUIRE(read_buffer[1] == 0);
         REQUIRE(read_buffer[2] == 1);
-        REQUIRE(read_buffer[3] == 2);        
+        REQUIRE(read_buffer[3] == 2);
     }
 }

@@ -10,9 +10,6 @@
 
 using Clock = SimClock;
 
-typedef BaseRateLimiter<
-    Clock,
-    unsigned long,
-    float> RateLimiter;
+typedef BaseRateLimiter<Clock, unsigned long, float> RateLimiter;
 
 typedef BaseRateTask<RateLimiter> RateTask;

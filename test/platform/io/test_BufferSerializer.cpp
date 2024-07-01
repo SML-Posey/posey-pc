@@ -3,39 +3,39 @@
 
 #include "platform/io/BufferSerializer.hpp"
 
-TEST_CASE("Test BufferSerializer class", "[BufferSerializer]")
-{
-    struct Data
-    {
-        uint8_t u8 = 0;
-        uint16_t u16 = 0;
-        uint32_t u32 = 0;
-        int8_t i8 = 0;
-        int16_t i16 = 0;
-        int32_t i32 = 0;
-        float f32 = 0;
-        double f64 = 0;
+TEST_CASE("Test BufferSerializer class", "[BufferSerializer]") {
+    struct Data {
+            uint8_t u8 = 0;
+            uint16_t u16 = 0;
+            uint32_t u32 = 0;
+            int8_t i8 = 0;
+            int16_t i16 = 0;
+            int32_t i32 = 0;
+            float f32 = 0;
+            double f64 = 0;
 
-        Data(
-            uint8_t u8 = 0,
-            uint16_t u16 = 0,
-            uint32_t u32 = 0,
-            int8_t i8 = 0,
-            int16_t i16 = 0,
-            int32_t i32 = 0,
-            float f32 = 0,
-            double f64 = 0) :
-            u8(u8), u16(u16), u32(u32),
-            i8(i8), i16(i16), i32(i32),
-            f32(f32), f64(f64) {}
+            Data(
+                uint8_t u8 = 0,
+                uint16_t u16 = 0,
+                uint32_t u32 = 0,
+                int8_t i8 = 0,
+                int16_t i16 = 0,
+                int32_t i32 = 0,
+                float f32 = 0,
+                double f64 = 0)
+                : u8(u8),
+                  u16(u16),
+                  u32(u32),
+                  i8(i8),
+                  i16(i16),
+                  i32(i32),
+                  f32(f32),
+                  f64(f64) {}
     };
 
     Data data(
-        0x12, 0x3456, 0x78910123,
-        0x45, 0x1234, 0x98765432,
-        3.123456789101112,
-        3.123456789101112
-    );
+        0x12, 0x3456, 0x78910123, 0x45, 0x1234, 0x98765432, 3.123456789101112,
+        3.123456789101112);
 
     constexpr uint16_t DataSize = 26;
 
@@ -90,8 +90,7 @@ TEST_CASE("Test BufferSerializer class", "[BufferSerializer]")
     REQUIRE(bs.read<double>() == data.f64);
     REQUIRE(bs.read<uint8_t>() == bs.get_checksum());
 
-    SECTION("Test copy callback")
-    {
+    SECTION("Test copy callback") {
         BufferSerializer<DataSize> bs2;
         bs2.copy_callback.reset();
         bs2.copy_callback.copy(bs.get_buffer());

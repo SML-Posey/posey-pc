@@ -4,12 +4,12 @@
 #include "platform/io/MessageListener.hpp"
 #include "platform/sensors/IMUData.hpp"
 
-TEST_CASE("Test MessageListener class", "[MessageListener]")
-{
+TEST_CASE("Test MessageListener class", "[MessageListener]") {
     BufferSerializer<1> m0_src, m0_dst;
     BufferSerializer<2> m1_src, m1_dst;
     BufferSerializer<3> m2_src, m2_dst;
-    BufferSerializer<4> m3_src, m3_dst;;
+    BufferSerializer<4> m3_src, m3_dst;
+    ;
 
     MessageListener<3, 10> ml;
     REQUIRE(ml.add_listener(0, m0_dst.capacity(), &m0_dst.copy_callback));
@@ -18,8 +18,7 @@ TEST_CASE("Test MessageListener class", "[MessageListener]")
 
     REQUIRE(!ml.add_listener(3, m3_dst.capacity(), &m3_dst.copy_callback));
 
-    SECTION("Write/read M0-M2, ignore M3")
-    {
+    SECTION("Write/read M0-M2, ignore M3") {
         REQUIRE(ml.process_next() == -1);
 
         m0_src.write_syncword();
@@ -80,10 +79,9 @@ TEST_CASE("Test MessageListener class", "[MessageListener]")
         REQUIRE(ml.num_ignored_messages() == 1);
     }
 
-    SECTION("With Junk")
-    {
+    SECTION("With Junk") {
         constexpr uint8_t JunkSize = 3;
-        uint8_t junk[JunkSize] = { 0x12, 0x34, 0x56 };
+        uint8_t junk[JunkSize] = {0x12, 0x34, 0x56};
 
         REQUIRE(ml.process_next() == -1);
 
@@ -107,7 +105,7 @@ TEST_CASE("Test MessageListener class", "[MessageListener]")
 
         REQUIRE(ml.process_next() == 0);
         REQUIRE(ml.num_messages() == 1);
-        REQUIRE(ml.num_skipped_bytes() == JunkSize*3);
+        REQUIRE(ml.num_skipped_bytes() == JunkSize * 3);
         REQUIRE(ml.write(junk, JunkSize) == 3);
 
         REQUIRE(m0_dst.valid_checksum());
@@ -122,7 +120,7 @@ TEST_CASE("Test MessageListener class", "[MessageListener]")
         REQUIRE(ml.write(m1_src.get_buffer(), m1_src.used()) == m1_src.used());
 
         REQUIRE(ml.process_next() == 1);
-        REQUIRE(ml.num_skipped_bytes() == JunkSize*4);
+        REQUIRE(ml.num_skipped_bytes() == JunkSize * 4);
         REQUIRE(ml.num_messages() == 2);
 
         REQUIRE(m1_dst.valid_checksum());
@@ -161,19 +159,15 @@ TEST_CASE("Test MessageListener class", "[MessageListener]")
         REQUIRE(ml.num_ignored_messages() == 1);
     }
 
-    SECTION("Via polling source")
-    {
-        class PollWrapper : public BaseMessageReader
-        {
+    SECTION("Via polling source") {
+        class PollWrapper : public BaseMessageReader {
             public:
-                PollWrapper(const uint8_t * buffer, const uint16_t size) :
-                    buffer(buffer), bytes_available(size) {}
+                PollWrapper(const uint8_t* buffer, const uint16_t size)
+                    : buffer(buffer), bytes_available(size) {}
 
-                uint16_t read_to(
-                    uint8_t * dst,
-                    uint16_t size) override
-                {
-                    if (size > bytes_available) size = bytes_available;
+                uint16_t read_to(uint8_t* dst, uint16_t size) override {
+                    if (size > bytes_available)
+                        size = bytes_available;
                     for (auto di = 0; di < size; ++di)
                         dst[di] = buffer[di];
                     bytes_available -= size;
@@ -182,7 +176,7 @@ TEST_CASE("Test MessageListener class", "[MessageListener]")
                 }
 
             private:
-                const uint8_t * buffer;
+                const uint8_t* buffer;
                 uint16_t bytes_available;
         };
         REQUIRE(ml.process_next() == -1);
@@ -190,7 +184,9 @@ TEST_CASE("Test MessageListener class", "[MessageListener]")
         m0_src.write_syncword();
         m0_src.write<uint8_t>(0);
         m0_src.write_checksum();
-        REQUIRE(ml.poll(PollWrapper(m0_src.get_buffer(), m0_src.used())) == m0_src.used());
+        REQUIRE(
+            ml.poll(PollWrapper(m0_src.get_buffer(), m0_src.used())) ==
+            m0_src.used());
 
         REQUIRE(ml.process_next() == 0);
         REQUIRE(ml.num_messages() == 1);
@@ -203,7 +199,9 @@ TEST_CASE("Test MessageListener class", "[MessageListener]")
         m1_src.write<uint8_t>(1);
         m1_src.write<int8_t>(-12);
         m1_src.write_checksum();
-        REQUIRE(ml.poll(PollWrapper(m1_src.get_buffer(), m1_src.used())) == m1_src.used());
+        REQUIRE(
+            ml.poll(PollWrapper(m1_src.get_buffer(), m1_src.used())) ==
+            m1_src.used());
 
         REQUIRE(ml.process_next() == 1);
         REQUIRE(ml.num_messages() == 2);
@@ -221,7 +219,9 @@ TEST_CASE("Test MessageListener class", "[MessageListener]")
         m2_src.write<uint8_t>(2);
         m2_src.write<int16_t>(-923);
         m2_src.write_checksum();
-        REQUIRE(ml.poll(PollWrapper(m2_src.get_buffer(), m2_src.used())) == m2_src.used());
+        REQUIRE(
+            ml.poll(PollWrapper(m2_src.get_buffer(), m2_src.used())) ==
+            m2_src.used());
 
         REQUIRE(ml.process_next() == 2);
         REQUIRE(ml.num_messages() == 3);
@@ -238,15 +238,16 @@ TEST_CASE("Test MessageListener class", "[MessageListener]")
         m3_src.write<uint16_t>(8832);
         m3_src.write<uint8_t>(23);
         m3_src.write_checksum();
-        REQUIRE(ml.poll(PollWrapper(m3_src.get_buffer(), m3_src.used())) == m3_src.used());
+        REQUIRE(
+            ml.poll(PollWrapper(m3_src.get_buffer(), m3_src.used())) ==
+            m3_src.used());
 
         REQUIRE(ml.process_next() == -1);
         REQUIRE(ml.num_messages() == 3);
         REQUIRE(ml.num_ignored_messages() == 1);
     }
 
-    SECTION("With class")
-    {
+    SECTION("With class") {
         IMUData src, dst;
         src.time = 10;
         src.An = 1;
@@ -272,7 +273,8 @@ TEST_CASE("Test MessageListener class", "[MessageListener]")
         src.serialize(buf_src);
 
         MessageListener<1, 100> ml2;
-        ml2.add_listener(src.message_id, buf_src.capacity(), &buf_dst.copy_callback);
+        ml2.add_listener(
+            src.message_id, buf_src.capacity(), &buf_dst.copy_callback);
         ml2.write(buf_src.get_buffer(), buf_src.used());
         REQUIRE(ml2.process_next() == IMUData::message_id);
 

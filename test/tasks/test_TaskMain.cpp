@@ -1,12 +1,11 @@
 #include "catch2/catch.hpp"
 #include "fmt/format.h"
 
-#include "test_common.hpp"
-#include "tasks/TaskTelemetry.hpp"
 #include "MessageAck.hpp"
+#include "tasks/TaskTelemetry.hpp"
+#include "test_common.hpp"
 
-TEST_CASE("Test TaskTelemetry", "[TaskMain]")
-{
+TEST_CASE("Test TaskTelemetry", "[TaskMain]") {
     TaskTelemetry telem;
     telem.counter = 12;
     telem.t_start = 234;

@@ -1,11 +1,10 @@
 #include "catch2/catch.hpp"
 #include "fmt/format.h"
 
-#include "test_common.hpp"
 #include "platform/sensors/BLEData.hpp"
+#include "test_common.hpp"
 
-TEST_CASE("Test BLEData class", "[BLEData]")
-{
+TEST_CASE("Test BLEData class", "[BLEData]") {
     BLEData data;
 
     data.time = 55;
