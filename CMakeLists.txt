@@ -39,6 +39,7 @@ if (ENABLE_TESTS)
     add_executable(PoseyTest ${POSEY_TEST_SRCS})
     target_link_libraries(PoseyTest PoseyLib Catch2::Catch2 fmt::fmt)
     target_include_directories(PoseyTest PUBLIC
+        Catch2::Catch2
         ${CMAKE_SOURCE_DIR}/posey-lib
         ${CMAKE_SOURCE_DIR}/sim/src
         ${CMAKE_SOURCE_DIR}/test)
